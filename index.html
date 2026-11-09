@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101b32">
+  <meta name="description" content="مخزني - إدارة المخزون والمبيعات">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <title>مخزني</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="icon.svg" alt=""><div><strong>مخزني</strong><small>إدارة المخزون والمبيعات</small></div></div>
+    <span class="local-tag">نسخة تجريبية محلية</span>
+  </header>
+  <main>
+    <section class="summary">
+      <article><span>عدد المنتجات</span><b id="productsCount">0</b></article>
+      <article><span>قيمة المخزون بسعر الشراء</span><b id="stockValue">0 د.ع</b></article>
+      <article><span>مبيعات اليوم</span><b id="todaySales">0 د.ع</b></article>
+    </section>
+    <nav class="tabs" aria-label="الأقسام">
+      <button class="tab active" data-tab="inventory">المنتجات</button>
+      <button class="tab" data-tab="sale">تسجيل بيع</button>
+      <button class="tab" data-tab="history">سجل الحركة</button>
+    </nav>
+    <section id="inventory" class="panel">
+      <div class="section-head"><h1>المنتجات</h1><button id="addToggle" class="primary">＋ إضافة منتج</button></div>
+      <input id="search" class="search" placeholder="ابحث باسم المنتج أو الكود…" autocomplete="off">
+      <form id="productForm" class="form hidden">
+        <h2>إضافة منتج جديد</h2>
+        <label>اسم المنتج<input name="name" required maxlength="80" placeholder="مثلاً: قميص رجالي"></label>
+        <div class="two">
+          <label>كود / موديل<input name="code" maxlength="40" placeholder="اختياري"></label>
+          <label>اللون أو الوصف<input name="note" maxlength="80" placeholder="اختياري"></label>
+        </div>
+        <div class="two">
+          <label>سعر الشراء (د.ع)<input name="buy" type="number" min="0" step="1" required></label>
+          <label>سعر البيع (د.ع)<input name="sell" type="number" min="0" step="1" required></label>
+        </div>
+        <label>الكمية<input name="qty" type="number" min="0" step="1" required></label>
+        <label>صورة المنتج<input name="photo" type="file" accept="image/*"></label>
+        <div class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelAdd" class="secondary" type="button">إلغاء</button></div>
+      </form>
+      <div id="productList" class="product-list"></div>
+      <p id="emptyInventory" class="empty">ماكو منتجات بعد. أضف أول منتج حتى تبدأ.</p>
+    </section>
+    <section id="sale" class="panel hidden">
+      <h1>تسجيل بيع</h1>
+      <form id="saleForm" class="form">
+        <label>المنتج<select name="product" id="saleProduct" required><option value="">اختر المنتج</option></select></label>
+        <label>الكمية المباعة<input name="qty" type="number" min="1" step="1" value="1" required></label>
+        <p class="hint" id="saleHint">اختر منتجاً لعرض السعر والكمية المتوفرة.</p>
+        <button class="primary" type="submit">تأكيد البيع وخصم المخزون</button>
+      </form>
+    </section>
+    <section id="history" class="panel hidden">
+      <h1>سجل الحركة</h1>
+      <div id="historyList"></div>
+      <p id="emptyHistory" class="empty">ماكو حركات مسجلة لحد الآن.</p>
+    </section>
+  </main>
+  <footer>مخزني © نسخة أولية — البيانات محفوظة على هذا الجهاز فقط</footer>
+  <script src="app.js"></script>
+</body>
+</html>
