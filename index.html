@@ -4,65 +4,41 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#101b32">
-  <meta name="description" content="مخزني - إدارة المخزون والمبيعات">
+  <meta name="description" content="مخزني - إدارة المخزون والمبيعات والمشتريات">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <title>مخزني</title>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand"><img src="icon.svg" alt=""><div><strong>مخزني</strong><small>إدارة المخزون والمبيعات</small></div></div>
-    <span class="local-tag">نسخة تجريبية محلية</span>
-  </header>
+  <header class="topbar"><div class="brand"><img src="icon.svg" alt=""><div><strong>مخزني</strong><small>إدارة المخزون والمبيعات</small></div></div><span class="local-tag">البيانات على هذا الجهاز</span></header>
   <main>
-    <section class="summary">
-      <article><span>عدد المنتجات</span><b id="productsCount">0</b></article>
-      <article><span>قيمة المخزون بسعر الشراء</span><b id="stockValue">0 د.ع</b></article>
-      <article><span>مبيعات اليوم</span><b id="todaySales">0 د.ع</b></article>
+    <section class="summary"><article><span>عدد المنتجات</span><b id="productsCount">0</b></article><article><span>قيمة المخزون بسعر الشراء</span><b id="stockValue">0 د.ع</b></article><article><span>مبيعات اليوم</span><b id="todaySales">0 د.ع</b></article></section>
+    <section id="dashboard" class="dashboard panel"><div class="section-head"><h1>لوحة التحكم</h1><span id="lowStockBadge" class="badge hidden"></span></div>
+      <div class="period-tabs" aria-label="فترة الملخص"><button class="period active" data-period="day">اليوم</button><button class="period" data-period="week">هذا الأسبوع</button><button class="period" data-period="month">هذا الشهر</button></div>
+      <div class="dashboard-grid"><article class="metric"><span>إجمالي المبيعات</span><b id="periodSales">0 د.ع</b></article><article class="metric"><span>عدد عمليات البيع</span><b id="periodCount">0</b></article><article class="metric"><span>القطع المباعة</span><b id="periodQty">0</b></article></div>
+      <h2>الأكثر مبيعاً — اقتراحات لإعادة الطلب</h2><div id="bestSellers" class="best-list"></div><div id="lowStockList" class="low-stock"></div>
     </section>
-    <nav class="tabs" aria-label="الأقسام">
-      <button class="tab active" data-tab="inventory">المنتجات</button>
-      <button class="tab" data-tab="sale">تسجيل بيع</button>
-      <button class="tab" data-tab="history">سجل الحركة</button>
-    </nav>
+    <nav class="tabs" aria-label="الأقسام"><button class="tab active" data-tab="inventory">المنتجات</button><button class="tab" data-tab="sale">تسجيل بيع</button><button class="tab" data-tab="purchase">تسجيل شراء</button><button class="tab" data-tab="history">سجل الحركة</button></nav>
     <section id="inventory" class="panel">
       <div class="section-head"><h1>المنتجات</h1><button id="addToggle" class="primary">＋ إضافة منتج</button></div>
       <input id="search" class="search" placeholder="ابحث باسم المنتج أو الكود…" autocomplete="off">
+      <div class="image-search"><label class="secondary file-button">⌕ ابحث بصورة<input id="imageSearch" type="file" accept="image/*"></label><button id="clearImageSearch" class="secondary hidden" type="button">إلغاء البحث بالصورة</button><small id="imageSearchHint">مطابقة بصرية تقريبية تعمل داخل المتصفح، وتعتمد على ألوان الصورة فقط.</small></div>
       <form id="productForm" class="form hidden">
-        <h2>إضافة منتج جديد</h2>
-        <label>اسم المنتج<input name="name" required maxlength="80" placeholder="مثلاً: قميص رجالي"></label>
-        <div class="two">
-          <label>كود / موديل<input name="code" maxlength="40" placeholder="اختياري"></label>
-          <label>اللون أو الوصف<input name="note" maxlength="80" placeholder="اختياري"></label>
-        </div>
-        <div class="two">
-          <label>سعر الشراء (د.ع)<input name="buy" type="number" min="0" step="1" required></label>
-          <label>سعر البيع (د.ع)<input name="sell" type="number" min="0" step="1" required></label>
-        </div>
-        <label>الكمية<input name="qty" type="number" min="0" step="1" required></label>
-        <label>صورة المنتج<input name="photo" type="file" accept="image/*"></label>
+        <h2 id="productFormTitle">إضافة منتج جديد</h2><label>اسم المنتج<input name="name" required maxlength="80" placeholder="مثلاً: قميص رجالي"></label>
+        <div class="two"><label>كود / موديل<input name="code" maxlength="40" placeholder="اختياري"></label><label>اللون أو الوصف<input name="note" maxlength="80" placeholder="اختياري"></label></div>
+        <div class="two"><label>سعر الشراء (د.ع)<input name="buy" type="number" min="0" step="1" required></label><label>سعر البيع (د.ع)<input name="sell" type="number" min="0" step="1" required></label></div>
+        <label>الكمية<input name="qty" type="number" min="0" step="1" required></label><label>صورة المنتج<input name="photo" type="file" accept="image/*"></label>
         <div class="actions"><button class="primary" type="submit">حفظ المنتج</button><button id="cancelAdd" class="secondary" type="button">إلغاء</button></div>
       </form>
-      <div id="productList" class="product-list"></div>
-      <p id="emptyInventory" class="empty">ماكو منتجات بعد. أضف أول منتج حتى تبدأ.</p>
+      <div id="productList" class="product-list"></div><p id="emptyInventory" class="empty">ماكو منتجات بعد. أضف أول منتج حتى تبدأ.</p>
     </section>
-    <section id="sale" class="panel hidden">
-      <h1>تسجيل بيع</h1>
-      <form id="saleForm" class="form">
-        <label>المنتج<select name="product" id="saleProduct" required><option value="">اختر المنتج</option></select></label>
-        <label>الكمية المباعة<input name="qty" type="number" min="1" step="1" value="1" required></label>
-        <p class="hint" id="saleHint">اختر منتجاً لعرض السعر والكمية المتوفرة.</p>
-        <button class="primary" type="submit">تأكيد البيع وخصم المخزون</button>
-      </form>
-    </section>
-    <section id="history" class="panel hidden">
-      <h1>سجل الحركة</h1>
-      <div id="historyList"></div>
-      <p id="emptyHistory" class="empty">ماكو حركات مسجلة لحد الآن.</p>
-    </section>
+    <section id="sale" class="panel hidden"><h1>تسجيل بيع</h1><form id="saleForm" class="form"><label>المنتج<select name="product" id="saleProduct" required><option value="">اختر المنتج</option></select></label><label>الكمية المباعة<input name="qty" type="number" min="1" step="1" value="1" required></label><p class="hint" id="saleHint">اختر منتجاً لعرض السعر والكمية المتوفرة.</p><button class="primary" type="submit">تأكيد البيع وخصم المخزون</button></form></section>
+    <section id="purchase" class="panel hidden"><h1>تسجيل شراء / توريد</h1><form id="purchaseForm" class="form"><label>المنتج<select name="product" id="purchaseProduct" required><option value="">اختر المنتج</option></select></label><label>الكمية المشتراة<input name="qty" type="number" min="1" step="1" value="1" required></label><label>سعر الشراء للقطعة (د.ع)<input name="price" id="purchasePrice" type="number" min="0" step="1" required></label><p class="hint" id="purchaseHint">سيتم إضافة الكمية إلى المخزون.</p><button class="primary" type="submit">تأكيد الشراء وإضافة المخزون</button></form></section>
+    <section id="history" class="panel hidden"><h1>سجل المبيعات والحركة</h1><h2>آخر المبيعات المسجلة</h2><div id="latestSales" class="latest-sales"></div><h2 class="history-title">كل الحركات وسجل التعديلات</h2><div id="historyList"></div><p id="emptyHistory" class="empty">ماكو حركات مسجلة لحد الآن.</p></section>
   </main>
-  <footer>مخزني © نسخة أولية — البيانات محفوظة على هذا الجهاز فقط</footer>
+  <dialog id="detailDialog" class="detail-dialog"><button class="dialog-close" type="button" aria-label="إغلاق">×</button><div id="detailContent"></div></dialog>
+  <footer>مخزني — البيانات محفوظة في هذا المتصفح فقط، ولا توجد مزامنة سحابية أو حسابات</footer>
   <script src="app.js"></script>
 </body>
 </html>
