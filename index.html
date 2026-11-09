@@ -11,8 +11,9 @@
   <title>مخزني</title>
 </head>
 <body>
-  <header class="topbar"><div class="brand"><img src="icon.svg" alt=""><div><strong>مخزني</strong><small>إدارة المخزون والمبيعات</small></div></div><span class="local-tag">البيانات على هذا الجهاز</span></header>
-  <main>
+  <header class="topbar"><div class="brand"><img src="icon.svg" alt=""><div><strong>مخزني</strong><small>إدارة المخزون والمبيعات المشتركة</small></div></div><div class="account-tools"><span id="accountLabel" class="local-tag hidden"></span><button id="staffToggle" class="secondary hidden" type="button">المستخدمون</button><button id="legacyImport" class="secondary hidden" type="button">استيراد بيانات هذا الجهاز</button><button id="logoutButton" class="secondary hidden" type="button">خروج</button></div></header>
+  <section id="loginPanel" class="auth-panel"><h1>تسجيل الدخول إلى المخزن</h1><p>استخدم الحساب الذي أنشأه مدير المخزن لك.</p><p class="migration-note">البيانات القديمة المحفوظة في هذا المتصفح لم تُنقل إلى السحابة.</p><form id="loginForm" class="form"><label>البريد الإلكتروني<input name="email" type="email" autocomplete="username" required></label><label>كلمة المرور<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">دخول</button><p id="loginError" class="auth-error" role="alert"></p></form></section>
+  <main id="appShell" class="hidden">
     <section class="summary"><article><span>عدد المنتجات</span><b id="productsCount">0</b></article><article><span>قيمة المخزون بسعر الشراء</span><b id="stockValue">0 د.ع</b></article><article><span>مبيعات اليوم</span><b id="todaySales">0 د.ع</b></article></section>
     <section id="dashboard" class="dashboard panel"><div class="section-head"><h1>لوحة التحكم</h1><span id="lowStockBadge" class="badge hidden"></span></div>
       <div class="period-tabs" aria-label="فترة الملخص"><button class="period active" data-period="day">اليوم</button><button class="period" data-period="week">هذا الأسبوع</button><button class="period" data-period="month">هذا الشهر</button></div>
@@ -38,7 +39,9 @@
     <section id="history" class="panel hidden"><h1>سجل المبيعات والحركة</h1><h2>آخر المبيعات المسجلة</h2><div id="latestSales" class="latest-sales"></div><h2 class="history-title">كل الحركات وسجل التعديلات</h2><div id="historyList"></div><p id="emptyHistory" class="empty">ماكو حركات مسجلة لحد الآن.</p></section>
   </main>
   <dialog id="detailDialog" class="detail-dialog"><button class="dialog-close" type="button" aria-label="إغلاق">×</button><div id="detailContent"></div></dialog>
-  <footer>مخزني — البيانات محفوظة في هذا المتصفح فقط، ولا توجد مزامنة سحابية أو حسابات</footer>
+  <dialog id="staffDialog" class="detail-dialog"><button class="staff-close dialog-close" type="button" aria-label="إغلاق">×</button><h1>إدارة المستخدمين والصلاحيات</h1><p class="muted">أنشئ حسابات الموظفين من لوحة Supabase، ثم غيّر صلاحياتهم هنا.</p><div id="staffList"></div></dialog>
+  <footer>مخزني — المخزون مشترك بين المستخدمين المسجلين، والبيانات محفوظة في قاعدة المشروع</footer>
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
