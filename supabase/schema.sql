@@ -236,6 +236,21 @@ begin
 end;
 $$;
 
+-- Permanently remove only manager-selected history rows. Product stock and prices are untouched.
+create or replace function public.clear_selected_history(p_event_ids uuid[])
+returns integer language plpgsql security definer set search_path = '' as $$
+declare removed integer;
+begin
+  if not private.is_manager() then raise exception 'manager_required'; end if;
+  if coalesce(array_length(p_event_ids,1),0)<1 or array_length(p_event_ids,1)>1000 then
+    raise exception 'invalid_event_selection';
+  end if;
+  delete from public.inventory_events where id = any(p_event_ids);
+  get diagnostics removed = row_count;
+  return removed;
+end;
+$$;
+
 create or replace function public.import_legacy_data(p_fingerprint text,p_products jsonb,p_events jsonb)
 returns jsonb language plpgsql security definer set search_path = '' as $$
 declare p jsonb; e jsonb; v_product_id uuid; v_old_id text; v_kind text; v_qty integer; v_delta integer; v_total bigint; v_price bigint; v_time timestamptz; n bigint; imported_products integer:=0; imported_events integer:=0; batch_rows integer;
@@ -297,6 +312,7 @@ revoke all on function public.record_sale(uuid,integer) from public, anon;
 revoke all on function public.record_purchase(uuid,integer,bigint) from public, anon;
 revoke all on function public.edit_inventory_event(uuid,integer,bigint) from public, anon;
 revoke all on function public.delete_inventory_event(uuid) from public, anon;
+revoke all on function public.clear_selected_history(uuid[]) from public, anon;
 grant execute on function public.create_product(text,text,text,bigint,bigint,integer,integer,text) to authenticated;
 grant execute on function public.list_products() to authenticated;
 grant execute on function public.import_legacy_data(text,jsonb,jsonb) to authenticated;
@@ -306,3 +322,4 @@ grant execute on function public.record_sale(uuid,integer) to authenticated;
 grant execute on function public.record_purchase(uuid,integer,bigint) to authenticated;
 grant execute on function public.edit_inventory_event(uuid,integer,bigint) to authenticated;
 grant execute on function public.delete_inventory_event(uuid) to authenticated;
+grant execute on function public.clear_selected_history(uuid[]) to authenticated;
